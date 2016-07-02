@@ -1,1 +1,36 @@
+#!/usr/bin/env python2
+# written by Moses Arocha
+# Written with the help of TJ O'Connor in his book "Violent Python"
 
+from _winreg import *
+
+def val2addr(val):
+	addr = '';
+	for ch in val:
+	   addr += '%02x '% ord(ch)
+	addr = addr.strip(' ').replace(' ', ':')[0:17]
+	return addr
+
+def printNets():
+	net = "SOFTWARE\Microsoft\Windows NT\CurrentVerison"+"\NetworkList\Signatures\Unmanaged"
+	key = OpenKey(HKEY_LOCAL_MACHINE, net)
+	print '\n\t[*] Networks You Have Joined.'
+	for i in range(100):
+	   try:
+		guid = EnumKey(key, i)
+		netKey = OpenKey(key, str(guid))
+		(n, addr, t) = EnumValue(netKey, 5)
+		(n, name, t) = enumeValue(netKey, 4)
+		macAddr = val2addr(addr)
+		netName = str(name)
+		print '[+] ' + netName ' ' + macAddr
+		CloseKey(netKey)
+	   except:
+		break
+
+def main():
+	printNets()
+	
+
+if __name__ == "__main__":
+	main()
