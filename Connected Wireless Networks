@@ -4,30 +4,32 @@
 
 from _winreg import *
 
-def BinaryToMac(val):
+def BinaryToMac(val):				# Converts the binary information from the Windows Registry to readable MAC Addresses
 	addr = '';
 	for ch in val:
-	   addr += '%02x '% ord(ch)
+	   addr += '%02x '% ord(ch)		# Uses a binary to MAC conversion method, replaces spaces with ":" and returns the finished address
 	addr = addr.strip(' ').replace(' ', ':')[0:17]
-	return addr
+	return addr			
 
 def PrintNetworks():
-	net = "SOFTWARE\Microsoft\Windows NT\CurrentVerison\NetworkList\Signatures\Unmanaged"
+	net = "SOFTWARE\Microsoft\Windows NT\CurrentVerison\NetworkList\Signatures\Unmanaged" # The root location of the MAC Addresses
 	key = OpenKey(HKEY_LOCAL_MACHINE, net)
-	print '\n\t[*] Networks You Have Joined.'
-	for i in range(100):
+	print '\n\t[Scanning] Wifi Networks Previously Joined\n'	#Out put the user finally sees, if reached, location search successful
+	for i in range(50):						# Repeats task 50 times, of grabbing the information from the WR
 		guid = EnumKey(key, i)
 		netKey = OpenKey(key, str(guid))
 		(n, addr, t) = EnumValue(netKey, 5)
 		(n, name, t) = EnumValue(netKey, 4)
-		MACAddr = BinaryToMac(addr)
+		MACAddr = BinaryToMac(addr)				# After grabbing the info, sends it to the BinaryToMac function where the conversion occurs
 		netName = str(name)
-		print '[+] ' + netName + ' ' + MACAddr
-		CloseKey(netKey)
+		print '\t[Success] ' + netName + ' ' + MACAddr		# If successful, outputs this
+		CloseKey(netKey)					# Finally ends with closing the file
 
+##The main function, references the PrintNetworks function, which calls the BinaryToMac function##
 def main():
 	PrintNetworks()
 	
 
 if __name__ == "__main__":
 	main()
+		
