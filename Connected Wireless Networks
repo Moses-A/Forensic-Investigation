@@ -2,6 +2,13 @@
 # written by Moses Arocha
 # Written with the help of TJ O'Connor in his book "Violent Python"
 
+import os
+import optparse
+import mechanize
+import urllib
+import re
+import urlparse
+
 from _winreg import *
 
 def BinaryToMac(val):				# Converts the binary information from the Windows Registry to readable MAC Addresses
@@ -11,11 +18,33 @@ def BinaryToMac(val):				# Converts the binary information from the Windows Regi
 	addr = addr.strip(' ').replace(' ', ':')[0:17]
 	return addr			
 
+def wiglePrint(username, password, netid):
+	browser = mechanize.Browser()
+	browser.open('http://wigle.net')
+	reqData = urllib.urlencode({'credential_0': username, 'credential_1': password})
+	browser.open('https://wigle.net//gps/gps/gps/main/login', reqData)
+	params = []
+	params['netid'] = netid
+	reqParams = urllib.urlencode(params)
+	respURL = 'http://wigle.net/gps/gps/main/confirmquery/'
+	resp = browser.open(respURL, reqParams).read()
+	mapLat = 'N/A'
+	mapLon = 'N/A'
+	rLat = re.findall(r'maplat=.*\&', resp)
+	if rLat:
+		mapLat = rLat[0].split('&')[0].split('=')[1]
+	rLon = re.findall(r'maplon=.*\&', resp)
+	if rLon:
+		mapLon = rLon[0].split
+	print '[-] Lat: ' + mapLat + ', Lon: ' + mapLon
+
+
 def PrintNetworks():
 	net = "SOFTWARE\Microsoft\Windows NT\CurrentVerison\NetworkList\Signatures\Unmanaged" # The root location of the MAC Addresses
 	key = OpenKey(HKEY_LOCAL_MACHINE, net)
 	print '\n\t[Scanning] Wifi Networks Previously Joined\n'	#Out put the user finally sees, if reached, location search successful
 	for i in range(50):						# Repeats task 50 times, of grabbing the information from the WR
+	   try:
 		guid = EnumKey(key, i)
 		netKey = OpenKey(key, str(guid))
 		(n, addr, t) = EnumValue(netKey, 5)
@@ -23,13 +52,25 @@ def PrintNetworks():
 		MACAddr = BinaryToMac(addr)				# After grabbing the info, sends it to the BinaryToMac function where the conversion occurs
 		netName = str(name)
 		print '\t[Success] ' + netName + ' ' + MACAddr		# If successful, outputs this
-		CloseKey(netKey)					# Finally ends with closing the file
+		wiglePrint(username, password, macAdddr)
+		CloseKey(netKey)
+ 	   except:
+		break					# Finally ends with closing the file
 
 ##The main function, references the PrintNetworks function, which calls the BinaryToMac function##
 def main():
-	PrintNetworks()
+	optparse.OptionParser("usage%prog -u <wigleusername> -p <wigle password>")
+	parser.add_option('-u', dest='username', type='string', help='specify wigle username')
+	parser.add_option('-p', dest='password', type='string', help='specify wigle password')
+	(options, args) = parser.parse_args()
+	username = options.username
+	password = options.password
+	if username == None or password == None:
+		print parser.usage
+		exit(0)
+	else:
+		printNets(username, password)
 	
-
 if __name__ == "__main__":
 	main()
 		
