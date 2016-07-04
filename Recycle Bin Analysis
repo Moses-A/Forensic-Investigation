@@ -1,9 +1,6 @@
 #!/usr/bin/env python2
 # written by Moses Arocha
 
-#!/usr/bin/env python2
-# written by Moses Arocha
-
 import os
 import optparse
 from _winreg import *
@@ -30,9 +27,14 @@ def findRecycled(recycleDir):
 		files = os.listdir(recycleDir + sid)
 		user = sid2user(sid)
 		print '\n\t[*] Listing Files For User: ' + str(user)
+		i = 0
 		for file in files:
-			print '[+] Found File: ' + str(file)
+                        i = i + 1
+			print "[", i, "] Found File: " + str(file)
 
 def main():
 	recycledDir = returnDir()
-	findRec
+	findRecycled(recycledDir)
+
+if __name__ == '__main__':
+	main()
