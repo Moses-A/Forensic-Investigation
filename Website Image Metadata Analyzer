@@ -10,54 +10,54 @@ from bs4 import BeautifulSoup
 from PIL import Image
 from PIL.ExifTags import TAGS
 
-def findImages(url):
+def URLImages(url):
 	print '[+] Finding Images on ' + url
 	urlContent = urllib2.urlopen(url).read()
 	soup = BeautifulSoup(urlContent, "lxml")
-	imgTags = soup.findAll('img')
-	return imgTags
+	ImageTags = soup.findAll('img')
+	return ImageTags
 
-def downloadImage(imgTag):
+def downloadImage(ImageTag):
 	try:
 		print '[+] Downloading Image ...'
-		imgSrc = imgTag['src']
-		imgContent = urllib2.urlopen(imgSrc).read()
-		imgFileName = basename(urlsplit(imgSrc)[2])
-		imgFile = open(imgFileName, 'wb')
-		imgFile.write(imgContent)
-		imgFile.close()
-		return imgFileName
+		ImageSource = ImageTag['src']
+		ImageContent = urllib2.urlopen(ImageSource).read()
+		ImageName = basename(urlsplit(ImageSource)[2])
+		ImageFile = open(ImageName, 'wb')
+		ImageFile.write(ImageContent)
+		ImageFile.close()
+		return ImageName
 	except:
 		return ''
 
-def testForExif(imgFileName):
+def checkExifData(ImageName):
 	try:
 		exifData = {}
-		imgFile = Image.open(imgFileName)
-		info = imgFile._getexif()
-		if info:
-			for (tag,value) in info.items():
+		ImageFile = Image.open(ImageName)
+		Data = ImageFile._getexif()
+		if Data:
+			for (tag,value) in Data.items():
 				decoded = TAGS.get(tag, tag)
 				exifData[decoded] = value
 			exifGPS = exifData['GPSInfo']
 			if exifGPS:
-				print '[*] ' + imgFileName + ' contains GPS MetaData'
+				print '[*] ' + ImageName + ' contains GPS MetaData'
 	except:
 		pass
 
 def main():
-	parser = optparse.OptionParser('usage%prog -u <target url>')
-	parser.add_option('-u', dest='url', type='string', help='specify url address')
+	parser = optparse.OptionParser('usage%prog -U <Target URLl>')
+	parser.add_option('-u', '--URL', dest='url', type='string', help='Specify URL ADDRESS')
 	(options, args) = parser.parse_args()
 	url = options.url
 	if url == None:
 		print parser.usage
 		exit(0)
 	else:
-		imgTags = findImages(url)
-		for imgTag in imgTags:
-			imgFileName = downloadImage(imgTag)
-			testForExif(imgFileName)
+		ImageTags = URLImages(url)
+		for ImageTag in ImageTags:
+			ImageName = downloadImage(ImageTag)
+			checkExifData(ImageName)
 
 if __name__ == '__main__':
 	main()
