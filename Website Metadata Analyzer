@@ -15,6 +15,7 @@ def findImages(url):
 	urlContent = urllib2.urlopen(url).read()
 	soup = BeautifulSoup(urlContent, "lxml")
 	imgTags = soup.findAll('img')
+	print imgTags
 	return imgTags
 
 def downloadImage(imgTag):
@@ -41,7 +42,7 @@ def testForExif(imgFileName):
 				exifData[decoded] = value
 			exifGPS = exifData['GPSInfo']
 			if exifGPS:
-				print '[*] ' + imgFileName + 'contains GPS MetaData'
+				print '[*] ' + imgFileName + ' contains GPS MetaData'
 	except:
 		pass
 
