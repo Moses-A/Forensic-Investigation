@@ -11,7 +11,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 
 def URLImages(url):
-	print '[+] Finding Images on ' + url
+	print '\n\n[+] Searching For Images On : ' + url +'\n'
 	urlContent = urllib2.urlopen(url).read()
 	soup = BeautifulSoup(urlContent, "lxml")
 	ImageTags = soup.findAll('img')
@@ -19,7 +19,7 @@ def URLImages(url):
 
 def downloadImage(ImageTag):
 	try:
-		print '[+] Downloading Image ...'
+		print '[Attempt] Scanning Image ...'
 		ImageSource = ImageTag['src']
 		ImageContent = urllib2.urlopen(ImageSource).read()
 		ImageName = basename(urlsplit(ImageSource)[2])
@@ -41,13 +41,13 @@ def checkExifData(ImageName):
 				exifData[decoded] = value
 			exifGPS = exifData['GPSInfo']
 			if exifGPS:
-				print '[*] ' + ImageName + ' contains GPS MetaData'
+				print '\t[Success] ' + ImageName + ' This Image Contains GPS Data'
 	except:
 		pass
 
 def main():
 	parser = optparse.OptionParser('usage%prog -U <Target URLl>')
-	parser.add_option('-u', '--URL', dest='url', type='string', help='Specify URL ADDRESS')
+	parser.add_option('-U', '--URL', dest='url', type='string', help='Specify URL ADDRESS')
 	(options, args) = parser.parse_args()
 	url = options.url
 	if url == None:
