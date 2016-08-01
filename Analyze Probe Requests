@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # Written by Moses Arocha
+# Created in Python, with the help of TJ O'Connor's book "Violent Python"
 
 from scapy.all import *
 import optparse
