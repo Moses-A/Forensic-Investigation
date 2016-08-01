@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 # written by Moses Arocha
+# Created in Python, with the help of TJ O'Connor's book "Violent Python"
 
 import os
 import optparse
