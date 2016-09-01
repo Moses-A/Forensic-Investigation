@@ -7,7 +7,7 @@ from _winreg import *
 def BinaryToMac(val):				# Converts the binary information from the Windows Registry to readable MAC Addresses.
     addr = '';
     for ch in val:
-       addr += '%02x '% ord(ch)		# Uses a binary to MAC conversion method, replaces spaces with ":" and returns the finished address
+        addr += '%02x '% ord(ch)	# Uses a binary to MAC conversion method, replaces spaces with ":" and returns the finished address
     addr = addr.strip(' ').replace(' ', ':')[0:17]
     return addr			
 
@@ -28,7 +28,7 @@ def PrintNetworks():
     	    print '\n\t[Success] ' + netName + ' ' + MACAddr + '\n\t DNS Server : ' + DNServer 
     	    CloseKey(netKey)
         except:
-	        break
+            break
 
 def main():
     PrintNetworks()
