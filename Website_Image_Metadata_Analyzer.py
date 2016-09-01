@@ -18,8 +18,8 @@ def URLImages(url):
 	return ImageTags
 
 def ImageChecker(ImageTag):
-	try:
-		print '[Attempt] Scanning Image ...'			# Attempted per image in the ImageTags list
+    try:
+	    print '[Attempt] Scanning Image ...'			# Attempted per image in the ImageTags list
 		ImageSource = ImageTag['src']
 		ImageContent = urllib2.urlopen(ImageSource).read()	# Opens up and reads the Image's Source
 		ImageName = basename(urlsplit(ImageSource)[2])
@@ -62,4 +62,4 @@ def main():
 			checkExifData(ImageName)			# Sends the downloaded Images to the ExifData function to check for info
 
 if __name__ == '__main__':
-	main()
+    main()
