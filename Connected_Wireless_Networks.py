@@ -18,12 +18,12 @@ def PrintNetworks():
     for i in range(50):					
         try:
             guid = EnumKey(key, i)
-        	netKey = OpenKey(key, str(guid))
-        	(n, addr, t) = EnumValue(netKey, 5)     # Grabs the MAC Address of each connection
-        	(n, name, t) = EnumValue(netKey, 4)     # Grabs the name of each connection
-        	(n, dns, t)  = EnumValue(netKey, 3)     # Grabs the DNS server used of each connection
-        	MACAddr = BinaryToMac(addr)				# After grabbing the info, sends it to the BinaryToMac function where the conversion occurs
-        	netName = str(name)
+            netKey = OpenKey(key, str(guid))
+            (n, addr, t) = EnumValue(netKey, 5)     # Grabs the MAC Address of each connection
+            (n, name, t) = EnumValue(netKey, 4)     # Grabs the name of each connection
+            (n, dns, t)  = EnumValue(netKey, 3)     # Grabs the DNS server used of each connection
+            MACAddr = BinaryToMac(addr)				# After grabbing the info, sends it to the BinaryToMac function where the conversion occurs
+            netName = str(name)
             DNServer = str(dns)
     	    print '\n\t[Success] ' + netName + ' ' + MACAddr + '\n\t DNS Server : ' + DNServer 
     	    CloseKey(netKey)
